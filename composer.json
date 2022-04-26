@@ -1,0 +1,25 @@
+{
+    "name": "zxin/express-service",
+    "type": "library",
+    "authors": [
+        {
+            "name": "zxin"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Zxin\\ExpressService\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.4|^8.0",
+        "symfony/polyfill-php80": "^1.25.0",
+        "symfony/polyfill-php81": "^1.25.0",
+        "guzzlehttp/guzzle": "^7.4.2"
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": false
+    },
+    "minimum-stability": "stable"
+}
