@@ -24,12 +24,11 @@ class ShipmentTracker
 
     public function register(
         string $trackNumber,
-        ?string $tag = null,
-        ?string $carrier = self::CARRIER_UPS_CODE
+        ?int $carrier = self::CARRIER_UPS_CODE,
+        ?string $tag = null
     ): RegisterTrack
     {
-        $track = new RegisterTrack($trackNumber, $tag);
-        $track->setCarrier($carrier);
+        $track = new RegisterTrack($trackNumber, $carrier, $tag);
         $data = $this->registerMulti([
             $track
         ]);

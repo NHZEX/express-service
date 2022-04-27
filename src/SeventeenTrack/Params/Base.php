@@ -9,7 +9,7 @@ abstract class Base implements \JsonSerializable
 {
     protected string $number;
 
-    protected ?int $carrier = ShipmentTracker::CARRIER_UPS_CODE;
+    protected ?int $carrier;
 
     protected int $_errorCode = 0;
 

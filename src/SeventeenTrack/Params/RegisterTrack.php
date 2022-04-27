@@ -10,10 +10,11 @@ class RegisterTrack extends Base
 
     protected ?bool $_register = false;
 
-    public function __construct(string $number, ?string $tag = null)
+    public function __construct(string $number, ?int $carrier = null, ?string $tag = null)
     {
         $this->number = $number;
         $this->tag = $tag;
+        $this->carrier = $carrier;
     }
 
     /**
