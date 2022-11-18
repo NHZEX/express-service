@@ -29,7 +29,7 @@ class ApiClient
         }
 
         $options = [
-            'base_uri'              => 'https://api.17track.net/track/v1/',
+            'base_uri'              => 'https://api.17track.net',
             RequestOptions::TIMEOUT => 30.0,
             RequestOptions::VERIFY  => CaBundle::getSystemCaRootBundlePath(),
             RequestOptions::HEADERS => [

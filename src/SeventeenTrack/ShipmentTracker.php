@@ -13,10 +13,6 @@ class ShipmentTracker
 {
     private ApiClient $api;
 
-    public const CARRIER_USPS_CODE = 21051;
-    public const CARRIER_FEDEX_CODE = 100003;
-    public const CARRIER_UPS_CODE = 100002;
-
     public function __construct(string $token)
     {
         $this->api = new ApiClient($token);
@@ -24,7 +20,7 @@ class ShipmentTracker
 
     public function register(
         string $trackNumber,
-        ?int $carrier = self::CARRIER_UPS_CODE,
+        int $carrier,
         ?string $tag = null
     ): RegisterTrack
     {
@@ -46,7 +42,7 @@ class ShipmentTracker
             throw new \InvalidArgumentException('单次请求最多40个单号');
         }
 
-        $result = $this->api->post('register', $trackNumbers);
+        $result = $this->api->post('track/v2/register', $trackNumbers);
         $data = $result['data'];
 
         $mapping = [];
@@ -63,6 +59,7 @@ class ShipmentTracker
             }
 
             $params->setRegister(true);
+            $params->setOrigin($item['origin']);
         }
 
         foreach ($data['rejected'] ?? [] as $item) {
@@ -81,7 +78,7 @@ class ShipmentTracker
         return array_values($mapping);
     }
 
-    public function getTrackInfo(string $trackNumber, int $carrier = self::CARRIER_UPS_CODE): TrackInfo
+    public function getTrackInfo(string $trackNumber, int $carrier): QueryTrackInfo
     {
         $track = new QueryTrackInfo($trackNumber);
         $track->setCarrier($carrier);
@@ -94,7 +91,7 @@ class ShipmentTracker
 
     /**
      * @param array<QueryTrackInfo> $trackNumbers
-     * @return array<TrackInfo>
+     * @return array<QueryTrackInfo>
      */
     public function getTrackInfoMulti(array $trackNumbers): array
     {
@@ -102,13 +99,13 @@ class ShipmentTracker
             throw new \InvalidArgumentException('单次请求最多40个单号');
         }
 
-        $result = $this->api->post('gettrackinfo', $trackNumbers);
+        $result = $this->api->post('track/v2/gettrackinfo', $trackNumbers);
 
         $data = $result['data'];
 
         $mapping = [];
         foreach ($trackNumbers as $params) {
-            $mapping[$params->getNumber()] = $params;
+            $mapping[$params->getNumber()] = clone $params;
         }
 
         $trackList = [];
@@ -120,11 +117,11 @@ class ShipmentTracker
                 );
             }
 
-            $track = new TrackInfo($params->getNumber());
-            $rawTrack = $item['track'];
-            $events = TrackEventAdapter::buildEventsFromArray($rawTrack);
-            $track->setSuccess($item['tag'] ?? '', $events, $rawTrack['e'], $rawTrack['is1']);
-            $trackList[] = $track;
+            $params->setCarrier($item['carrier']);
+            $params->setParam($item['param']);
+            $params->setTag($item['tag']);
+            $params->setTrackInfo($item['track_info']);
+            $trackList[] = $params;
         }
         foreach ($data['rejected'] ?? [] as $item) {
             $params = $mapping[$item['number']] ?? null;
@@ -134,9 +131,8 @@ class ShipmentTracker
                 );
             }
 
-            $track = new TrackInfo($params->getNumber());
-            $track->setErrorInfo($item['error']['code'], $item['error']['message']);
-            $trackList[] = $track;
+            $params->setErrorInfo($item['error']['code'], $item['error']['message']);
+            $trackList[] = $params;
         }
 
         return $trackList;

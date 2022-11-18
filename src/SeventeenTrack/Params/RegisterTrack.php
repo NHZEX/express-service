@@ -8,13 +8,22 @@ class RegisterTrack extends Base
 
     protected ?string $tag = null;
 
+    // 物流单号附加查询参数
+    protected ?string $param = null;
+
     protected ?bool $_register = false;
+
+    protected ?int $_origin = null;
 
     public function __construct(string $number, ?int $carrier = null, ?string $tag = null)
     {
         $this->number = $number;
         $this->tag = $tag;
+
         $this->carrier = $carrier;
+        if (null === $carrier) {
+            $this->auto_detection = true;
+        }
     }
 
     /**
@@ -55,5 +64,21 @@ class RegisterTrack extends Base
     public function setRegister(?bool $register): void
     {
         $this->_register = $register;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getOrigin(): ?int
+    {
+        return $this->_origin;
+    }
+
+    /**
+     * @param int|null $origin
+     */
+    public function setOrigin(?int $origin): void
+    {
+        $this->_origin = $origin;
     }
 }
