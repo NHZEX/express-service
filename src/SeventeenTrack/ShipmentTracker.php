@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Zxin\Express\SeventeenTrack;
 
@@ -8,6 +9,7 @@ use Zxin\Express\SeventeenTrack\Params\RegisterTrack;
 use Zxin\Express\SeventeenTrack\Params\TrackInfo;
 use function array_values;
 use function count;
+use function var_dump;
 
 class ShipmentTracker
 {
@@ -18,15 +20,21 @@ class ShipmentTracker
         $this->api = new ApiClient($token);
     }
 
-    public function register(
-        string $trackNumber,
-        int $carrier,
-        ?string $tag = null
-    ): RegisterTrack
+    public function getQuota(): array
     {
+        $result = $this->api->post('track/v2/getquota', []);
+
+        return $result['data'];
+    }
+
+    public function register(
+        string  $trackNumber,
+        int     $carrier,
+        ?string $tag = null
+    ): RegisterTrack {
         $track = new RegisterTrack($trackNumber, $carrier, $tag);
-        $data = $this->registerMulti([
-            $track
+        $data  = $this->registerMulti([
+            $track,
         ]);
 
         return $data[0];
@@ -43,7 +51,7 @@ class ShipmentTracker
         }
 
         $result = $this->api->post('track/v2/register', $trackNumbers);
-        $data = $result['data'];
+        $data   = $result['data'];
 
         $mapping = [];
         foreach ($trackNumbers as $params) {
