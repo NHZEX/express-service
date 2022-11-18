@@ -2,6 +2,9 @@
 
 namespace Zxin\Express\SeventeenTrack\Params;
 
+/**
+ * @deprecated 待重构
+ */
 class TrackInfo
 {
     const STATUS_CREATE     = 'create';

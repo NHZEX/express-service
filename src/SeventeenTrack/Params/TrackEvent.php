@@ -4,6 +4,9 @@ namespace Zxin\Express\SeventeenTrack\Params;
 
 use Carbon\Carbon;
 
+/**
+ * @deprecated 待重构
+ */
 class TrackEvent
 {
     /**

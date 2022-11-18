@@ -2,6 +2,8 @@
 
 namespace Zxin\Express\SeventeenTrack\Params;
 
+use Zxin\Express\SeventeenTrack\Struct\Track\TrackInfoStruct;
+
 class QueryTrackInfo extends Base
 {
     protected ?string $_tag = null;
@@ -11,9 +13,11 @@ class QueryTrackInfo extends Base
 
     protected ?array $_track_info = null;
 
+    private ?TrackInfoStruct $_track_obj = null;
+
     public function __construct(string $number, ?int $carrier = null)
     {
-        $this->number = $number;
+        $this->number  = $number;
         $this->carrier = $carrier;
     }
 
@@ -55,6 +59,16 @@ class QueryTrackInfo extends Base
     public function getTrackInfo(): ?array
     {
         return $this->_track_info;
+    }
+
+    /**
+     * @return TrackInfoStruct|null
+     */
+    public function getTrackObj(): ?TrackInfoStruct
+    {
+        return null === $this->_track_info
+            ? null
+            : ($this->_track_obj ??= TrackInfoStruct::fromArr($this->_track_info));
     }
 
     /**

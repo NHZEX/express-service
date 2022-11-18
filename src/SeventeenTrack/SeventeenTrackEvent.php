@@ -7,6 +7,9 @@ use Zxin\Express\SeventeenTrack\Params\TrackInfo;
 use function hash;
 use function json_encode;
 
+/**
+ * @deprecated 待重构
+ */
 class SeventeenTrackEvent
 {
     public const EVENT_TRACKING_STOPPED = 'TRACKING_STOPPED';
