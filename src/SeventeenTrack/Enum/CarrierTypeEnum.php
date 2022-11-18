@@ -1,6 +1,6 @@
 <?php
 
-namespace Zxin\Express\SeventeenTrack;
+namespace Zxin\Express\SeventeenTrack\Enum;
 
 final class CarrierTypeEnum
 {
