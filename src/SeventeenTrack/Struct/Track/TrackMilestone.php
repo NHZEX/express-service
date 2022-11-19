@@ -41,8 +41,12 @@ class TrackMilestone
         self::STAGE_Returned,
     ];
 
-    public function __construct(array $items)
+    public function __construct(?array $items)
     {
+        if (empty($items)) {
+            return;
+        }
+
         foreach ($items as $item) {
             $this->items[] = new TrackMilestoneStage(
                 $item['key_stage'],

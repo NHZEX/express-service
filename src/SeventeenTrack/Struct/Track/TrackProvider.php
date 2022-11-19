@@ -9,7 +9,7 @@ class TrackProvider
     // 运输商信息
     public array $provider;
     // 	服务类型
-    public string $service_type;
+    public ?string $service_type;
     // 最近同步状态
     public string $latest_sync_status;
     // 最近同步时间

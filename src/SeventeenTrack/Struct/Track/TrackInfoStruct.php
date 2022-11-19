@@ -18,7 +18,7 @@ class TrackInfoStruct
      */
     public array $latest_status;
     // 最新事件
-    public TrackEvent $latest_event;
+    public ?TrackEvent $latest_event;
     // 时效相关信息
     public TrackTimeMetrics $time_metrics;
     // 程碑阶段
