@@ -13,7 +13,7 @@ class TrackEvent
     // 描述
     public string $description;
     // 地点
-    public string $location;
+    public ?string $location;
     // 阶段内容
     public ?string $stage;
     // 地点信息
