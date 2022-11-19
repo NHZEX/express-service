@@ -29,6 +29,18 @@ class TrackMilestone
     public const STAGE_Returning          = 'Returning';
     public const STAGE_Returned           = 'Returned';
 
+    public const STAGE_KEYS = [
+        self::STAGE_InfoReceived,
+        self::STAGE_PickedUp,
+        self::STAGE_Departure,
+        self::STAGE_Arrival,
+        self::STAGE_AvailableForPickup,
+        self::STAGE_OutForDelivery,
+        self::STAGE_Delivered,
+        self::STAGE_Returning,
+        self::STAGE_Returned,
+    ];
+
     public function __construct(array $items)
     {
         foreach ($items as $item) {

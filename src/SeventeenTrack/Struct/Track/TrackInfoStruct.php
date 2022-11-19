@@ -30,11 +30,6 @@ class TrackInfoStruct
      */
     public array $tracking;
 
-    public function getHiddenKey(): array
-    {
-        return [];
-    }
-
     public static function fromArr(array $source, ?CacheInterface $cache = null): TrackInfoStruct
     {
         $mapper = (new \CuyZ\Valinor\MapperBuilder());
@@ -50,13 +45,4 @@ class TrackInfoStruct
             ->mapper()
             ->map(TrackInfoStruct::class, Source::array($source));
     }
-
-    public function getLatestStatus(): array
-    {
-        return [
-            'status'    => $this->latest_status['status'],
-            'subStatus' => $this->latest_status['sub_status'],
-        ];
-    }
-
 }
