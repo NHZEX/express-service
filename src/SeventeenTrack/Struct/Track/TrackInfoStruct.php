@@ -36,11 +36,13 @@ class TrackInfoStruct
         if (null !== $cache) {
             $mapper = $mapper->withCache($cache);
         }
-        return $mapper->allowPermissiveTypes()
+        return $mapper
+            ->allowPermissiveTypes()
             ->allowSuperfluousKeys()
+            ->enableFlexibleCasting()
             ->supportDateFormats(DATE_ATOM)
             ->registerConstructor(
-                TrackMilestone::class,
+                \Closure::fromCallable([TrackMilestone::class, 'fromArr']),
             )
             ->mapper()
             ->map(TrackInfoStruct::class, Source::array($source));
