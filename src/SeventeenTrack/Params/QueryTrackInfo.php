@@ -2,6 +2,7 @@
 
 namespace Zxin\Express\SeventeenTrack\Params;
 
+use Psr\SimpleCache\CacheInterface;
 use Zxin\Express\SeventeenTrack\Struct\Track\TrackInfoStruct;
 
 class QueryTrackInfo extends Base
@@ -15,10 +16,20 @@ class QueryTrackInfo extends Base
 
     private ?TrackInfoStruct $_track_obj = null;
 
+    private ?CacheInterface $_cache = null;
+
     public function __construct(string $number, ?int $carrier = null)
     {
         $this->number  = $number;
         $this->carrier = $carrier;
+    }
+
+    /**
+     * @param CacheInterface|null $cache
+     */
+    public function setCache(?CacheInterface $cache): void
+    {
+        $this->_cache = $cache;
     }
 
     /**
@@ -68,7 +79,7 @@ class QueryTrackInfo extends Base
     {
         return null === $this->_track_info
             ? null
-            : ($this->_track_obj ??= TrackInfoStruct::fromArr($this->_track_info));
+            : ($this->_track_obj ??= TrackInfoStruct::fromArr($this->_track_info, $this->_cache));
     }
 
     /**

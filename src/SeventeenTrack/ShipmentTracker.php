@@ -3,21 +3,29 @@ declare(strict_types=1);
 
 namespace Zxin\Express\SeventeenTrack;
 
-use Zxin\Express\TrackEventAdapter;
+use Psr\SimpleCache\CacheInterface;
 use Zxin\Express\SeventeenTrack\Params\QueryTrackInfo;
 use Zxin\Express\SeventeenTrack\Params\RegisterTrack;
-use Zxin\Express\SeventeenTrack\Params\TrackInfo;
 use function array_values;
 use function count;
-use function var_dump;
 
 class ShipmentTracker
 {
     private ApiClient $api;
 
+    private ?CacheInterface $cache = null;
+
     public function __construct(string $token)
     {
         $this->api = new ApiClient($token);
+    }
+
+    /**
+     * @param CacheInterface|null $cache
+     */
+    public function setCache(?CacheInterface $cache): void
+    {
+        $this->cache = $cache;
     }
 
     public function getQuota(): array
@@ -113,7 +121,9 @@ class ShipmentTracker
 
         $mapping = [];
         foreach ($trackNumbers as $params) {
-            $mapping[$params->getNumber()] = clone $params;
+            $newParams = clone $params;
+            $newParams->setCache($this->cache);
+            $mapping[$params->getNumber()] = $newParams;
         }
 
         $trackList = [];

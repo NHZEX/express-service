@@ -3,6 +3,7 @@
 namespace Zxin\Express\SeventeenTrack\Struct\Track;
 
 use CuyZ\Valinor\Mapper\Source\Source;
+use Psr\SimpleCache\CacheInterface;
 
 class TrackInfoStruct
 {
@@ -34,10 +35,13 @@ class TrackInfoStruct
         return [];
     }
 
-    public static function fromArr(array $source): TrackInfoStruct
+    public static function fromArr(array $source, ?CacheInterface $cache = null): TrackInfoStruct
     {
-        return (new \CuyZ\Valinor\MapperBuilder())
-            ->allowPermissiveTypes()
+        $mapper = (new \CuyZ\Valinor\MapperBuilder());
+        if (null !== $cache) {
+            $mapper = $mapper->withCache($cache);
+        }
+        return $mapper->allowPermissiveTypes()
             ->allowSuperfluousKeys()
             ->supportDateFormats(DATE_ATOM)
             ->registerConstructor(
