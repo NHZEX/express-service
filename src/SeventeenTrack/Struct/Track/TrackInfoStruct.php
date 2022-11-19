@@ -47,4 +47,9 @@ class TrackInfoStruct
             ->mapper()
             ->map(TrackInfoStruct::class, Source::array($source));
     }
+
+    public function getEventHash(): int
+    {
+        return $this->tracking['providers_hash'];
+    }
 }
