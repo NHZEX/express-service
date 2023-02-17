@@ -183,7 +183,7 @@ class ShipmentTracker
             $params = $mapping[$item['number']] ?? null;
             if (null === $params) {
                 throw new SeventeenRequestException(
-                    "Unexpected value {$item['number']} [track info]"
+                    "Unexpected value {$item['number']} [re-track]"
                 );
             }
 
@@ -195,6 +195,55 @@ class ShipmentTracker
             if (null === $params) {
                 throw new SeventeenRequestException(
                     "Unexpected value {$item['number']} [re-track]"
+                );
+            }
+
+            $params->setErrorInfo($item['error']['code'], $item['error']['message']);
+            $trackList[] = $params;
+        }
+
+        return $trackList;
+    }
+
+    /**
+     * 触发推送
+     * @param array<QueryTrackInfo> $trackNumbers
+     * @return array<QueryTrackInfo>
+     */
+    public function triggerPushMulti(array $trackNumbers): array
+    {
+        if (count($trackNumbers) > 40) {
+            throw new \InvalidArgumentException('单次请求最多40个单号');
+        }
+
+        $result = $this->api->post('track/v2/push', $trackNumbers);
+
+        $data = $result['data'];
+
+        $mapping = [];
+        foreach ($trackNumbers as $params) {
+            $newParams = clone $params;
+            $newParams->setCache($this->cache);
+            $mapping[$params->getNumber()] = $newParams;
+        }
+
+        $trackList = [];
+        foreach ($data['accepted'] ?? [] as $item) {
+            $params = $mapping[$item['number']] ?? null;
+            if (null === $params) {
+                throw new SeventeenRequestException(
+                    "Unexpected value {$item['number']} [push]"
+                );
+            }
+
+            $params->setCarrier($item['carrier']);
+            $trackList[] = $params;
+        }
+        foreach ($data['rejected'] ?? [] as $item) {
+            $params = $mapping[$item['number']] ?? null;
+            if (null === $params) {
+                throw new SeventeenRequestException(
+                    "Unexpected value {$item['number']} [push]"
                 );
             }
 
